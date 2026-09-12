@@ -11,7 +11,7 @@ allowed-tools: Read Write Edit Glob Grep
 
 ## How to use this skill
 
-- Load together with `antislop.md` whenever the task is copy or text work. The core holds the mechanism (the purpose test, the three tiers, the Delivery Gate) and the hard bans (R-02, R-15, R-16, R-17, R-18, R-36, R-38). This skill holds copy-specific depth that the core does not.
+- Load together with `antislop.md` whenever the task is copy or text work. The core holds the mechanism (the purpose test, the three tiers, and the Delivery Gate). It also defines the contextual copy checks and hard honesty constraints referenced here. This skill holds copy-specific depth that the core does not.
 - Every pattern has the same shape: **The pattern**, **Why it reads as AI**, **Before** (the slop), **After** (the fix), with the governing core rule cited as R-XX.
 - Two rules apply to everything below:
   - **Never invent facts** (R-17, R-36, R-38). A rewrite adds no fact, name, number, date, quote, or citation that is not in the source text or supplied by the user. Specificity comes from the source or the user, not from the rewrite. If a sentence needs real detail to work, ask for it or write the plain version without it.
@@ -233,7 +233,7 @@ allowed-tools: Read Write Edit Glob Grep
 
 - **The pattern:** the em dash character (`—`) used as an aside or connector: *"institutions — not the people — continue"*.
 - **Why it reads as AI:** it is one of the most reliable AI tells, and the core bans it outright.
-- **Rule:** R-02 forbids the em dash in any text. Replace each one, in rough order of preference: a period (start a new sentence), a comma (a tight aside), a colon (introduce an explanation), parentheses (a true aside), or restructure the sentence. Also catch spaced em dashes (` — `) and double hyphens (` -- `) used the same way.
+- **Rule:** R-02 treats repeated em dashes as a warning sign, not a universal ban. Check whether each use fits the language, voice, cadence, and editorial context. When it does not, consider a period, comma, colon, parentheses, or a sentence restructure.
 - **Before:**
   > The policy — announced without warning — affects thousands of workers.
 - **After:**
@@ -242,7 +242,7 @@ allowed-tools: Read Write Edit Glob Grep
   > You don't say "Netherlands, Europe" as an address — yet this mislabeling continues.
 - **After:**
   > You don't say "Netherlands, Europe" as an address, yet this mislabeling continues.
-- **False positive:** many editors and journalists use em dashes deliberately. On its own an em dash is not proof of AI. It counts when it sits in a cluster with other tells (R-02 still bans it in output, but do not rewrite the user's deliberate style without saying so).
+- **False positive:** many editors and journalists use em dashes deliberately. On its own an em dash is not proof of AI. Treat it as evidence only when it clusters with other tells or becomes a repetitive crutch.
 - **Voice override:** if the user provides a writing sample that uses em dashes at a certain frequency, match the sample's frequency instead of cutting them all (see Voice calibration).
 
 ### Boldface Overuse
@@ -344,7 +344,7 @@ If the user provides a sample of their own writing, match it before rewriting:
 
 1. Read the sample first. Note its sentence lengths, vocabulary, paragraph openings, punctuation, and recurring phrases.
 2. Match those habits instead of merely deleting AI patterns. Do not upgrade casual words or regularize deliberate quirks.
-3. The sample outranks this skill's style rules. If the sample uses em dashes, keep them at roughly the sample's frequency (R-02 still applies to any copy the user did not authorize; when the user's own voice uses them, the voice wins).
+3. The sample outranks generic style heuristics. If it uses em dashes deliberately, preserve roughly that frequency unless clarity suffers.
 
 Without a sample, use the defaults above. Matching the author beats scrubbing the tell.
 
@@ -362,7 +362,7 @@ Run these alongside the core Delivery Gate when the task is copy work. Every lin
 
 - [ ] No fabricated numbers, testimonials, names, dates, or claims; everything real or a labeled placeholder (R-17, R-18, R-36, R-38)
 - [ ] Buzzwords from R-16 and the Empty AI Vocabulary list replaced with specific, evidenced language
-- [ ] No em dashes in the output (R-02), unless the user's own sample voice uses them
+- [ ] Em dashes, if present, fit the language and voice rather than appearing as a repetitive default (R-02)
 - [ ] No excessive quotation marks: quotes only where they carry meaning (dialogue, real citations, titles), not as default emphasis (R-36)
 - [ ] No all-caps emphasis clauses: emphasis written into the sentence, not shouted with caps (R-36)
 - [ ] Every sentence names its actor: no actorless passive, no abstraction given a human verb, where a real subject was available (R-02, R-16)
