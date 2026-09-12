@@ -32,7 +32,7 @@ If no antislop pointer exists and this file is being read for the first time, ru
 3. **Resolve direction** (only if a UI skill was selected). Check for `DESIGN.md` or explicit brand/style direction. If none exists, be honest that antislop is a **filter, not a beautifier**: without direction the output tends toward monotonous. Recommend having a `DESIGN.md`, then offer these paths:
    - **1. The user supplies direction (recommended).** They write their own `DESIGN.md`, or answer a few direction questions (identity, personality, palette, typography, mood) and the agent transcribes their answers into `DESIGN.md`. The user is the author; the agent only formats. Never invent example content for `DESIGN.md`.
    - **2. The agent supplies direction, with an honest warning.** The agent writes the direction itself, stating explicitly that agent-generated style tends toward default AI taste, which is the slop antislop filters, so the result is likely monotonous. If chosen, still ask a minimal brief (product, audience, mood) before building.
-   - **3. The user skips direction for now.** Proceed without a `DESIGN.md`. Any UI built this way must be labeled *"draft without direction"* with dials ENERGY 1 / RHYTHM 1 / MOTION 1 (R-37), and is not a shippable deliverable.
+   - **3. Proceed with working assumptions.** If the user skips a `DESIGN.md`, infer a conservative direction from the product and audience, state material assumptions, and treat them as reversible. Use dials only if they help communicate the direction (R-37).
 4. **Get the chosen skill(s) in place; the user does the fetching, never the agent.** A `SKILL.md` is instructions the agent will obey, so an agent that downloads one at runtime is fetching its own next prompt: do not do it, and do not ask for network access here. The skills ship as folders in the release (`skills/<name>/SKILL.md`). If a chosen skill folder is missing next to this file, tell the user which ones are missing and that they come with the release matching this core, so a newer skill never mixes with an older one. `antislop-human` also needs `contrast-check.py` from that same folder.
 5. **Append the pointer block at the END of the project's entry file** (the file the running tool reads at session start: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex, `GEMINI.md` for Gemini CLI, and so on). If that file does not exist, create it. Never modify existing content:
    ```md
@@ -206,7 +206,7 @@ These are common patterns found in AI-generated designs. Use this table to **aud
 | **Irrelevant FAQ** | FAQ contains generic template questions ("Is my data secure?", "Can I cancel anytime?") with no real relevance to the product |
 | **Assumed Logo & Profile Photos** | Creating app logos, avatars, or profile photos without explicit instructions, generated purely on assumption |
 | **Navbar Links to Nowhere** | Navbar contains links to pages (Features, Contact, About, etc.) that have no actual section or page |
-| **File/CSS Patching via Script** | A feature (e.g. dark mode) added by an external script that rewrites source or CSS with string replacement. Signs: a `.py`/`.js` helper doing `str.replace` on `.css` files, "patch" scripts left in the repo |
+| **Brittle Source Patching** | An unreviewed one-off script rewrites source or CSS with fragile string replacement and remains the implementation path. Codemods and verified migrations are not slop |
 
 ### Identity & Originality
 
@@ -621,22 +621,15 @@ Answer the relevant questions. Any confirmed material defect should be fixed or 
 - [ ] Are material changed flows unverified, or are tests being claimed that were not performed? *(R-35)*
 - [ ] Were important design assumptions hidden or contradicted by the result? *(R-37)*
 
-### Block 2: Purpose-Gate (technique allowed, reason required)
+### Block 2: Purpose-Gate (context review)
 
-For each technique, the technique itself is allowed. FAIL if it appears as a default without purpose, or if the reason is not written down:
+For techniques present in the design, ask whether they serve the content, audience, brand, hierarchy, or interaction. Record reasons for conspicuous or disputed choices, not every routine use:
 
-- [ ] Do gradients/glows appear as a default with no stated hierarchy or brand purpose? *(R-01)*
-- [ ] Are there generic icons (sparkle, star, magic, lightning, diamond, robot, orb), an icon set picked for its library look (Lucide-style), or icons irrelevant to their content, with no written relevance? *(R-04)*
-- [ ] Is there a large monospace font, uppercase label with wide tracking, or a typeface chosen without a written brand-character reason? *(R-06)*
-- [ ] Is there a background grid, blueprint, graph paper, or dot pattern without a written visual-identity purpose? *(R-07)*
-- [ ] Are arrows (`→` / `↗`) placed on almost every button purely as decoration, with no written purpose? *(R-08)*
-- [ ] Are there capsule badges ("AI Powered", "Beta", "New", "Secure", "Fast") with no real function, or the full capsule + thin border + glow + uppercase combination? *(R-09)*
-- [ ] Is glassmorphism applied to more than 1-2 elements simultaneously (navbar + card + modal + sidebar)? *(R-10)*
-- [ ] Is a large shadow applied to every component, with no written elevation reason, making the page feel like it is floating? *(R-12)*
-- [ ] Is glow applied to cards, buttons, badges, icons, backgrounds, and borders simultaneously? *(R-13)*
-- [ ] Do all feature cards have identical size, icon, padding, and layout, with no written hierarchy reason? *(R-14)*
-- [ ] Do all elements use template animations simultaneously (Fade Up + Floating + Scale + Bounce) without a written UX purpose, or does the motion contradict the declared MOTION dial? *(R-19)*
-- [ ] Are there generic illustrations (Undraw, Storyset, 3D blob) with no written product connection? *(R-22)*
+- [ ] Do gradients, glows, glass, shadows, or patterns compete with content or appear by reflex? *(R-01, R-07, R-10, R-12, R-13)*
+- [ ] Are icons, arrows, badges, illustrations, or cards irrelevant to what they represent? *(R-04, R-08, R-09, R-14, R-22)*
+- [ ] Does typography conflict with readability, platform needs, or intended character? *(R-06)*
+- [ ] Does motion lack a UX or expressive purpose, impair access, or overwhelm hierarchy? *(R-19)*
+- [ ] Is any effect excessive in this composition? Judge cumulative impact, not a fixed count
 
 ### Block 3: Character & Fit (when relevant)
 
@@ -649,21 +642,21 @@ Use these prompts for expressive or brand-led work; do not force them onto purel
 
 ### Block 4: Craftsmanship & Quality Locks
 
-All answers must be **no**:
+Review the relevant questions and resolve material problems. A "yes" can be acceptable when the context provides a stronger reason:
 
-- [ ] C-1: Is there any visual or copy decision whose only justification is "it's the AI default"? *(Intentionality)*
-- [ ] C-2: Does any interactive element do nothing, with no clear label? *(Functional Completeness)*
-- [ ] C-3: Does any section exist only to fill an AI template, not to serve the product's content? *(Content-Driven Composition)*
-- [ ] C-4: Does the UI break in any state, theme, breakpoint, or without a mouse? *(Resilience)*
-- [ ] C-5: Is any testimonial, statistic, or claim fabricated? *(Evidence Over Claims)*
-- [ ] Does the layout follow an AI template (generic Hero+cards, "How It Works" always 3 steps, "Trusted By" logo bar, bento-grid mosaic, fake terminal window, 3 pricing columns, 4-column footer with no variation, uniform section rhythm), or does the section rhythm contradict the declared RHYTHM dial? *(R-05)*
-- [ ] Are all elements (buttons, cards, inputs, badges) made pill-shaped with no radius variation? *(R-11)*
-- [ ] Are CTAs still generic (Get Started, Learn More, Try Now, Explore, Discover)? *(R-15)*
-- [ ] Are there any AI marketing buzzwords (AI Powered, Seamless, Revolutionary, Cutting Edge, etc.)? *(R-16)*
-- [ ] Does the design still feel generic even if the logo and product name are swapped? *(R-20)*
-- [ ] Was dark mode forced as a default without a branding/user reason, or was a required light/dark toggle deferred with an excuse? *(R-21)*
-- [ ] Does the color palette exceed 2-3 core colors + 1 accent without a clear design system? *(R-29)*
-- [ ] Does the overall design look like a clone of another popular product (Linear, Vercel, Stripe, Notion, etc.)? *(R-30)*
-- [ ] Is there any major visual decision (color, layout, typography, spacing, cards, illustration) whose reason cannot be written in one line? *(R-31)*
+- [ ] C-1: Is a major decision justified only as an AI default? *(Intentionality)*
+- [ ] C-2: Does an interactive element misleadingly do nothing? *(Functional Completeness)*
+- [ ] C-3: Does a section exist only to fill a template? *(Content-Driven Composition)*
+- [ ] C-4: Does the UI break in a required state, theme, breakpoint, or input mode? *(Resilience)*
+- [ ] C-5: Is a testimonial, statistic, or claim fabricated or misleading? *(Evidence Over Claims)*
+- [ ] Does a familiar layout ignore the actual content or workflow? *(R-05)*
+- [ ] Are shape, CTA, and copy choices unclear or inappropriate in context? *(R-11, R-15, R-16)*
+- [ ] Is the level of identity wrong for the product or audience? *(R-20)*
+- [ ] Are shipped theme choices unsupported by user needs or poorly implemented? *(R-21)*
+- [ ] Is the palette incoherent or inconsistent in role, contrast, or hierarchy? *(R-29)*
+- [ ] Does the result copy another product so closely that it loses its own requirements or creates confusion? *(R-30)*
+- [ ] Are important, non-obvious decisions impossible to justify credibly? *(R-31)*
 
-If even one answer is **yes** (or **no** in Block 3), do not deliver. Fix it, re-run the gate, and only then ship. Delivery without a clean gate is a failure.
+Document accepted exceptions briefly. Fix defects; do not redesign merely to make every heuristic answer "no".
+
+Deliver when material defects are resolved and remaining limitations or accepted tradeoffs are stated honestly. The gate supports judgment; it does not replace it.
