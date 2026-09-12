@@ -232,28 +232,30 @@ All 38 rules still apply, but their force depends on risk. **Hard Gate** rules c
 
 These rules protect honesty, function, and accessibility. A finding is a FAIL when it creates a real defect or deceptive result, not merely because it matches a stylistic heuristic.
 
+
 #### R-02 — Copywriting
 
 - Treat repeated em dashes as a **copywriting warning sign**, not a defect by themselves
 - Prefer punctuation and sentence structure natural to the language, voice, and editorial context
 - Preserve em dashes in quotations, source text, established brand voice, or where they improve cadence or clarity
 - Avoid using em dashes as an automatic substitute for commas, colons, or sentence breaks
-#### R-03 — Mobile Responsiveness
 
-- **REQUIRED**: mobile layout must be perfect, not an afterthought
-- No horizontal overflow
-- Text does not escape its container
-- Cards do not collide or clip off-screen
-- Navbar remains comfortable to use
-- Button sizes meet the minimum tap target (44px)
-- Spacing stays consistent across all breakpoints
-- **Responsiveness is part of the design, not an add-on.**
+#### R-03 — Responsive Layout
 
-#### R-17 — Data & Numbers
+- Support the breakpoints and input modes required by the product
+- Prevent horizontal overflow, escaped text, collisions, clipped content, and unusable navigation
+- Meet appropriate target-size guidance for touch interfaces; 44 CSS px is a strong default, not a universal physical law
+- Preserve hierarchy and usability as the layout reflows
+- Verify representative narrow, medium, and wide viewports instead of demanding undefined "perfection"
 
-- **FORBIDDEN**: numbers and statistics without a real source
-- If real data is not available, display no numbers at all
-- Empty is better than deceptive
+
+#### R-17 — Claims, Data & Numbers
+
+- Do not present invented metrics, customer counts, performance figures, or statistics as facts
+- Cite or otherwise identify the source for consequential public claims
+- Clearly label sample, synthetic, estimated, or placeholder data
+- Ordinary interface values, examples, configuration numbers, and computed outputs do not each need an external citation when their origin is clear
+
 
 #### R-18 — Testimonials
 
@@ -261,21 +263,15 @@ These rules protect honesty, function, and accessibility. A finding is a FAIL wh
 - If you have no real testimonials, do not create a testimonials section
 - Use social proof that can be verified
 
-#### R-23 — Clarification & Visual Assets
 
-- **REQUIRED**: before creating any asset without explicit instructions, ask or use a clear placeholder
-- If there is an opportunity to ask, confirm the following first:
-  - App logo or icon (shape, color, concept)
-  - Avatars, profile photos, or images representing people/team
-  - Statistics and numbers to be displayed
-  - Names, job titles, or identities in testimonials
-  - Navigation structure and desired page layout
-- If asking is not possible (rapid prototyping, limited context): use clear placeholders and do not disguise them as final
-  - Logo: product name as text in an appropriate typeface, or the marker `[LOGO]`
-  - Profile photo: initial-based avatar or a simple geometric placeholder
-  - Statistics: not displayed, or marked `[REAL DATA]`
-- **Never generate assets as if they are the final version without confirmation**
-- If explicit instructions already exist, generate directly without asking again
+#### R-23 — Assumptions & Visual Assets
+
+- Use supplied assets and explicit requirements when available
+- Ask before making an assumption that would materially change brand identity, represent a real person or organization, or imply factual endorsement
+- For low-risk prototypes, use clearly labeled placeholders or reversible assumptions and state them briefly; do not block progress with a questionnaire
+- Never present invented logos, identities, statistics, testimonials, or people as approved final assets
+- If explicit instructions already exist, proceed without asking again
+
 
 #### R-24 — Navigation
 
@@ -284,14 +280,14 @@ These rules protect honesty, function, and accessibility. A finding is a FAIL wh
 - If a feature has not been built yet, do not include it in the navbar, or clearly label it as coming soon
 - The navbar must reflect the structure of content that actually exists
 
+
 #### R-25 — Color Contrast
 
-- **REQUIRED**: all text must meet the minimum WCAG AA contrast standard
-  - Normal text: minimum contrast ratio of 4.5:1
-  - Large text (18px+): minimum contrast ratio of 3:1
-- **FORBIDDEN**: light grey text on a grey background
-- **FORBIDDEN**: white text on a gradient that is light in some areas
-- Always test contrast across the entire area the text passes over, not just at a single point
+- User-facing text and essential interface graphics should meet the applicable WCAG contrast criteria for the conformance target
+- For WCAG AA, use 4.5:1 for normal text and 3:1 for large text, while respecting documented exceptions such as logos, inactive controls, and purely decorative content
+- Test text across the full background it occupies, including gradients, images, hover, focus, disabled, and theme states
+- When a project explicitly targets a different standard, document the target and do not silently claim WCAG AA compliance
+
 
 #### R-26 — Interactive Elements
 
@@ -308,18 +304,21 @@ Every interactive element must have a real behavior, or be removed:
 
 If an element genuinely cannot have a destination yet, remove it instead of shipping a dead control. A placeholder is acceptable only with a clear `// TODO` comment in code AND a visible label to the user (e.g. "Coming soon"). See "Functional Patterns" below.
 
+
 #### R-27 — UI States
 
 - Provide the states that are possible for the actual interface
 - Data fetched asynchronously usually needs loading, empty, error, and success states
 - Static pages, local-only controls, and views where a state is structurally impossible do not need fictional states added for rubric compliance
 - Document intentionally omitted states when the reason is not obvious
+
 #### R-28 — FAQ
 
 - **FORBIDDEN**: FAQ containing template questions that are not specific to the product
 - Every question in the FAQ must address a real concern of that product's users
 - If you do not know what questions are actually asked, do not create an FAQ section
 - A generic FAQ does more damage to trust than having no FAQ at all
+
 
 #### R-32 — Keyboard Accessibility
 
@@ -331,17 +330,21 @@ If an element genuinely cannot have a destination yet, remove it instead of ship
 - **FORBIDDEN**: removing the focus outline with `outline: none` or `outline: 0` without replacing it with a better custom focus indicator
 - A UI that can only be used with a mouse is an unfinished UI
 
-#### R-33 — No File/CSS Patching via Scripts
 
-- **FORBIDDEN**: implementing or altering UI features by running an external script that rewrites source files or CSS with string replacement
-- Build features directly in the source code where they belong
-- A feature added by a patch script (e.g. a Python script editing `.css` files) is broken by design and must be rewritten in source
+#### R-33 — Source Transformation Safety
+
+- Prefer direct source edits for small, local UI changes
+- Codemods, generators, migrations, and scripted rewrites are valid for large or repeatable changes when they are reviewable, scoped, idempotent where practical, and verified by diff and tests
+- Do not leave a brittle one-off string-replacement script as the runtime implementation of a feature
+- Never treat the mere use of a script as evidence that the resulting code is defective
+
 
 #### R-34 — Every Theme You Ship Must Work
 
 - If you ship a theme toggle, BOTH modes must be fully functional
 - Contrast, colors, and every component must be verified in each mode
 - **FORBIDDEN**: shipping a mode where base styles, fonts, or layout break
+
 
 #### R-35 — Verify Before You Deliver
 
@@ -352,23 +355,23 @@ If an element genuinely cannot have a destination yet, remove it instead of ship
 - For large products, use risk-based sampling plus automated coverage rather than requiring a manual click on every control
 - If execution is impossible, state the limitation and use code inspection or static checks. Do not claim tests that were not performed
 - Report concise evidence and remaining verification gaps; an honest limitation is not automatically a product failure
+
 #### R-36 — No Fabricated Claims
 
 - **FORBIDDEN**: inventing security, compliance, or performance claims ("SOC 2 compliant", "ISO 27001", "300% faster") without real evidence
 - **FORBIDDEN**: fake testimonials, fake statistics, fake names (see R-17, R-18)
 - If there is no real data, show no claim
 
-#### R-37 — Design Direction Required
 
-- Before building a UI, load the style direction: `DESIGN.md` or explicit brand guidance from the user
-- If no direction exists, ask the user, or state clearly that the design was built **without direction** and is a **draft**, not a deliverable
-- If no direction exists AND the user cannot be asked, the output MUST be labeled *"draft without direction"* AND use the honest default dials **ENERGY 1 / RHYTHM 1 / MOTION 1** (see Part 3). Never silently fall back to a neutral, sterile default
-- **FORBIDDEN**: designing without direction and silently falling into a neutral, sterile default
-- Style direction is the product owner's identity, not a slop pattern; this filter only applies on top of it
-- If `DESIGN.md` itself asks for a named slop pattern, do not silently follow it and do not silently override it: name the element, name the rule it collides with, and ask the owner to keep it or drop it
-- Ask only about a named pattern, never about a stylistic choice the direction is entitled to make: a bold palette or an unusual typeface is identity, not slop
-- Record the answer in one line: if the owner keeps it, proceed and note the override; if they drop it, apply the rule
-- A design built without direction is a draft, not a shippable result
+#### R-37 — Design Direction & Assumptions
+
+- Use `DESIGN.md`, an existing design system, brand guidance, or explicit user direction when available
+- If direction is incomplete, infer a conservative working direction from the product, audience, and surrounding UI; state material assumptions
+- Ask one focused question only when an unresolved choice would materially alter the result
+- A clearly labeled exploratory draft may use tentative direction, but missing a standalone `DESIGN.md` does not automatically make competent work unshippable
+- Do not silently fall into a generic neutral default and call it intentional
+- If explicit direction collides with an antislop heuristic, follow the user's direction unless it creates deception, inaccessibility, or a functional defect; note the tradeoff when useful
+
 
 #### R-38 — Real Content or Honest Placeholder
 
@@ -381,11 +384,13 @@ If an element genuinely cannot have a destination yet, remove it instead of ship
 
 Each technique below is allowed. It FAILS only when it appears as a default without a stated purpose, or when the reason for it is not written down. Every rule has the same shape: FORBIDDEN as default without purpose; ALLOWED when it serves hierarchy/identity and the reason is written; dose caps for the excessive cases.
 
+
 #### R-01 — Color & Gradients
 
 - **FORBIDDEN as default without purpose**: blue-to-purple, blue-to-cyan, purple-to-pink gradients as primary colors, harsh or rainbow gradients, purple-and-black schemes, neon or pastel palettes, radial orbs, colored glow backgrounds, neon blue buttons
 - **ALLOWED** when the color/gradient is part of an established brand identity OR serves a stated hierarchy goal, with the reason written down
 - A gradient that separates one level of hierarchy from another is craft; the same gradient covering the whole page is slop. The technique is not the problem, the purpose is
+
 
 #### R-04 — Icons
 
@@ -394,16 +399,19 @@ Each technique below is allowed. It FAILS only when it appears as a default with
 - Icons must be **genuinely relevant** to the content they represent, and the relevance written down when the icon is a generic glyph
 - If no appropriate icon exists, it is better to use none
 
+
 #### R-06 — Typography
 
 - **FORBIDDEN as default without purpose**: large monospace fonts used purely for "terminal" aesthetics, uppercase labels with extreme letter-spacing (`HOW IT WORKS`, `FEATURES`)
 - Choose typeface based on brand character, not because it is the AI model's default pick (Inter, Geist, Space Grotesk for sans; Geist Mono, JetBrains Mono, Fira Code for mono), and write the reason
 - Typography must **improve readability** and reflect the product's character
 
+
 #### R-07 — Background
 
 - **FORBIDDEN as default without purpose**: grid squares, blueprint lines, graph paper, dot patterns as a background
 - Use texture or pattern only if it genuinely supports the product's specific visual identity, with the reason written down
+
 
 #### R-08 — Button Arrows
 
@@ -411,32 +419,38 @@ Each technique below is allowed. It FAILS only when it appears as a default with
 - If used, ensure the size is proportional and serves a clear visual purpose, and write that purpose down
 - Not every CTA needs an arrow
 
+
 #### R-09 — Badges
 
 - **FORBIDDEN as default without purpose**: capsule badges containing "AI Powered", "Beta", "New", "Secure", "Fast" without context
 - Badges may only be used if **functionally needed** (a real status or real label), with the need written down
 - Avoid combining: capsule + thin border + glow + small dot + uppercase all at once
 
+
 #### R-10 — Glassmorphism
 
 - Use glassmorphism only when it supports hierarchy, depth, or an established visual language
 - Judge the effect across the whole composition; reduce stacked blur when it harms contrast, legibility, performance, or hierarchy
 - There is no universal element-count cap: the acceptable dose depends on context and execution
+
 #### R-12 — Shadow
 
 - Shadow must support **visual hierarchy**, not make every element float
 - Use shadow selectively as an elevation marker, not as a default for every component, and write the elevation reason down
+
 
 #### R-13 — Glow
 
 - Glow should support focus, state, atmosphere, or brand language rather than decorate every available surface
 - Evaluate cumulative intensity and hierarchy; reduce it when surfaces compete for attention
 - There is no universal element-count cap: context, contrast, and visual hierarchy determine whether the treatment is excessive
+
 #### R-14 — Feature Cards
 
 - **FORBIDDEN as default without purpose**: all cards having identical size, icon, padding, and layout
 - Create visual variation that reflects content hierarchy, and write the hierarchy reason down
 - Not every feature needs to be presented as a card
+
 
 #### R-19 — Animations
 
@@ -444,6 +458,7 @@ Each technique below is allowed. It FAILS only when it appears as a default with
 - **FORBIDDEN as default without purpose**: every element using Fade Up + Floating + Scale + Bounce simultaneously
 - Motion must match the declared MOTION dial (Part 3): a claimed "cinematic" page must actually move; a claimed "static" page must not
 - Use animation to guide attention, not just to fill the page
+
 
 #### R-22 — Illustrations
 
@@ -455,6 +470,7 @@ Each technique below is allowed. It FAILS only when it appears as a default with
 
 These are strong defaults for consistency and specificity. They may be overridden when actual content, user requirements, platform conventions, or an established design system provide a better reason.
 
+
 #### R-05 — Layout & Page Structure
 
 - Treat familiar compositions as warning signs when they appear by reflex: generic hero + card grids, fixed three-step explainers, bento mosaics, fake terminals, three-tier pricing, logo bars, and four-column footers
@@ -463,11 +479,13 @@ These are strong defaults for consistency and specificity. They may be overridde
 - Let section order follow the product's narrative flow rather than a memorized landing-page sequence (see Craftsmanship Standard C-3)
 - Uniformity can aid comprehension; variation can strengthen hierarchy. Neither is inherently superior
 - Do not introduce variation merely to prove that the layout is not a template
+
 #### R-11 — Border Radius
 
-- Use border radius that is **consistent with the defined design system**
-- **FORBIDDEN**: making every element pill-shaped (pill buttons, pill cards, pill inputs, pill badges)
-- Radius variation is a visual hierarchy tool; use it deliberately
+- Use radius tokens consistently with the design system and component semantics
+- A predominantly pill-shaped language is valid when it is intentional and remains legible; it is suspicious only when every component receives the same shape by reflex
+- Use radius variation only when it communicates hierarchy or component type, not as a mandatory decoration
+
 
 #### R-15 — CTA (Call to Action)
 
@@ -475,17 +493,20 @@ These are strong defaults for consistency and specificity. They may be overridde
 - Generic labels such as "Get Started", "Learn More", "Try Now", "Explore", or "Discover" are acceptable when they are the clearest familiar label in context
 - Do not make labels longer or more promotional merely to avoid a common phrase
 - Examples of specific labels: "Start Free Trial", "Watch Demo", "Create Account"
+
 #### R-16 — Copywriting & Buzzwords
 
 - Treat broad marketing terms such as "AI powered", "next generation", "revolutionary", "seamless", "cutting edge", "intelligent", "ultimate", "powerful", and "effortless" as unsupported claims unless the surrounding copy makes them concrete
 - Use specific language that explains real capabilities or benefits
 - Keep a term when it is an accurate product category, quoted brand language, or supported claim; otherwise replace it with evidence
-#### R-20 — Visual Identity
 
-- The design must have a strong identity: a specific palette, a typeface chosen for a reason, a unique composition
-- Every section must have a clear hierarchy
-- Layout is built around the actual product content needs
-- Identity comes from deliberate, explained choices, not from adding decoration (see Craftsmanship Standard C-1)
+#### R-20 — Appropriate Visual Identity
+
+- Match the required degree of visual identity to the product: a campaign may need distinction, while a government form or internal admin tool may benefit from familiarity and restraint
+- Establish clear hierarchy and build layout around actual content needs
+- Prefer deliberate, coherent choices over decoration added solely to appear unique
+- "Could belong to another product" is a prompt for review, not an automatic failure when platform conventions or usability justify similarity
+
 
 #### R-21 — Theme Choice
 
@@ -494,12 +515,14 @@ These are strong defaults for consistency and specificity. They may be overridde
 - Developer tools, terminals, media, and creative tools may have strong reasons for a dark default. Use those reasons rather than "dark looks tech"
 - Add multiple themes when the user asks for them or research and requirements justify the added implementation and testing cost
 - Every theme that is shipped must work correctly. A toggle that breaks either mode is a defect (see R-34)
+
 #### R-29 — Color Palette
 
 - Start with the smallest palette that can express hierarchy, state, data, and brand identity clearly
 - A compact palette of 2-3 core colors plus an accent is often effective, but it is a heuristic rather than a ceiling
 - Broader palettes are valid for data visualization, semantic states, illustration, localization, or established brand systems
 - Judge palette coherence, contrast, and role consistency rather than raw color count
+
 #### R-30 — Do Not Clone Popular Products
 
 - **FORBIDDEN**: building a visual that overall mimics another product without being asked
@@ -509,6 +532,7 @@ These are strong defaults for consistency and specificity. They may be overridde
 - AI defaults to cloning popular products because those patterns dominate training data
 - Visual references may be used as inspiration, not as a template to copy
 - The product must have its own visual identity, not the identity of another product
+
 
 #### R-31 — Explain Non-Obvious Decisions
 
@@ -527,43 +551,35 @@ A reason may be brief or detailed as needed. If no credible reason exists for a 
 
 A filter can remove slop, but it cannot add energy. Removing slop leaves a void, and the model fills that void with its most generic output. Liveliness must be **added** deliberately. This Part is that mechanism: positive requirements, not bans.
 
-### Three Dials (required)
+### Three Dials (optional planning shorthand)
 
-Every design must set three dials explicitly, derived from DESIGN.md or the Design Read, and hold them from the first section to the last:
+ENERGY, RHYTHM, and MOTION can help communicate direction when a project lacks established vocabulary. Use them when they clarify a choice; do not require them in every task or expose them in every deliverable.
 
 | Dial | 1 (Calm) | 2 (Balanced) | 3 (Bold) | What it answers |
 |---|---|---|---|---|
-| **ENERGY** | Linear, GOV.UK | Stripe, Vercel | Awwwards, agency portfolio | How hard does this design say hello? |
-| **RHYTHM** | Uniform grid, predictable | Consistent with a few breaks | Asymmetric, mixed compositions | How much do sections change from each other? |
-| **MOTION** | Hover states only | Scroll-reveal, transitions | Parallax, pin, choreography | How much motion, and why? |
+| **ENERGY** | restrained | present | expressive | How strongly does the design announce itself? |
+| **RHYTHM** | uniform | measured variation | highly varied | How much do sections change from each other? |
+| **MOTION** | state feedback | transitions | choreography | How much motion serves the experience? |
 
-The anchors (Linear, GOV.UK, Stripe, Vercel, Awwwards) are taste references for judging a value, not things to imitate.
+The three levels are coarse prompts, not measurable compliance grades. Existing design tokens, brand systems, motion guidelines, and user research take precedence.
 
-Why three levels and not ten: a model and a reviewer can reliably tell "is this section uniform or varied?" (binary, checkable). They cannot reliably judge "is this a 6 or a 7?" (continuous, uncheckable). Three levels make liveliness enforceable.
+### Levers (optional design prompts)
 
-Example sets: a designer portfolio sets ENERGY 3, RHYTHM 3, MOTION 2. A public-service site sets ENERGY 1, RHYTHM 1, MOTION 1.
+Use only the prompts that help the current interface:
 
-### Levers (how the dials become visual decisions)
+- **Focal hierarchy**: make the most important action or content easy to find; some screens legitimately have multiple peers
+- **Hierarchical contrast**: differentiate size, weight, color, and spacing with purpose
+- **Whitespace as structure**: use empty space to group and separate content
+- **Accent strategy**: use zero, one, or several accents according to the design system and content; control competition rather than counting accents
+- **Identity motif**: repeat a specific gesture when distinct brand recognition is useful; omit it when convention and neutrality better serve users
 
-These are tools for hitting the dial values, not bans:
+### Design Read (optional)
 
-- **One focal point per screen**: exactly one element that is clearly the most important on every screen; the rest defer to it
-- **Hierarchical contrast**: size, weight, and color are differentiated on purpose, not randomly
-- **Whitespace as structure**: empty space separates and sets rhythm, not leftover space
-- **One deliberate accent**: one color or gesture used sparingly at the key moment. Zero accents is sterile; an accent everywhere is slop
-- **Identity motif**: one pattern, gesture, or typographic voice that is specific and repeated, making the design "belong" to the product
+When useful, summarize the working interpretation before generation:
 
-### Design Read (how the dials are set)
+> Reading this as: `<page kind>` for `<audience>`, in a `<visual language>` style, with `<key constraints>`.
 
-Before generating, declare one line:
-
-> Reading this as: `<page kind>` for `<audience>`, in a `<visual language>` style, dial `<ENERGY/RHYTHM/MOTION>`.
-
-Example: *"Reading this as: B2B SaaS landing for technical buyers, with a Linear-style minimalist language, dial ENERGY 1 / RHYTHM 2 / MOTION 1."*
-
-1. **Direction exists** (DESIGN.md or a brief that expresses energy and mood): infer the dials from it and proceed. DESIGN.md may optionally include a line like `Dial: ENERGY 2 / RHYTHM 3 / MOTION 1`; if present, use it directly.
-2. **Direction is ambiguous**: ask exactly ONE decisive question, never a question dump. Example: *"Should this feel closer to Linear-clean or Awwwards-experimental?"* Use the answer to set the dials.
-3. **No direction and the user cannot be asked**: label the output *"draft without direction"*, set the honest default dials **ENERGY 1 / RHYTHM 1 / MOTION 1** (see R-37), and do not present it as a deliverable.
+If direction exists, apply it. If an ambiguity materially changes the result, ask one decisive question. Otherwise proceed with conservative, reversible assumptions and state the important ones. Do not force a named-product comparison or dial score when ordinary language is clearer.
 
 ## Functional Patterns
 
@@ -580,34 +596,30 @@ If none of these applies to an element, the element should not exist.
 
 ---
 
-## Delivery Gate (Mandatory)
+## Delivery Gate
 
-Run this gate BEFORE delivering. Output its status with your deliverable as a **PASS/FAIL report**: one line per item, and every `PASS` backed by concrete evidence (e.g. "R-26 PASS: every button has a real `href` or `onClick`; no dead controls", "R-35 PASS: ran the build and clicked every control: Signup -> /signup, empty form -> validation, mobile menu -> opens, no console errors").
-If any item is **FAIL** (or any answer is **yes**), do not deliver: fix it first, then re-run. A report containing a FAIL must never be shipped.
+Use the gate as a risk-based review before delivery. Report failures, material tradeoffs, and verification gaps concisely; do not dump a line-by-line rubric unless the user asks for it.
 
-The gate has four blocks: Hard Gate (absolute), Purpose-Gate (technique + written reason), Liveliness (dials + levers), Craftsmanship & Quality Locks (C-1..C-5 plus the consistency locks R-05, R-11, R-15, R-16, R-20, R-21, R-29, R-30, R-31).
+Fix material honesty, accessibility, and functional failures before shipping. A stylistic heuristic may be accepted when product context or explicit direction justifies it. Environmental limitations should be disclosed rather than mislabeled as design failures.
 
-### Block 1: Hard Gate (absolute)
+The four blocks cover Hard Gates, Purpose-Gates, optional liveliness prompts, and craftsmanship. Apply only checks relevant to the deliverable.
 
-Before declaring the design done, answer every question below. All answers must be **no**:
+### Block 1: Material Defects
 
-- [ ] Is there an em dash (`—`) anywhere in the text, outside the R-02 carve-out? *(R-02)*
-- [ ] Is there any horizontal overflow, text escaping its container, or broken layout on mobile? *(R-03)*
-- [ ] Are there any statistics without a real source (10K+ Users, 99.9% Uptime, etc.)? *(R-17)*
-- [ ] Are there any fictional testimonials (AI avatars, random names or job titles)? *(R-18)*
-- [ ] Were any visual assets (logo, avatar/profile photo, statistics, testimonials, or navigation structure) created without explicit instructions or confirmation, and without an honest placeholder? *(R-23)*
-- [ ] Are there navbar links pointing to sections or pages that do not exist? *(R-24)*
-- [ ] Is there any text with contrast below the WCAG AA standard (4.5:1 for normal text, 3:1 for large text)? *(R-25)*
-- [ ] Are there any buttons, dropdowns, or forms that do nothing, with no real behavior and no `// TODO` + visible label? *(R-26)*
-- [ ] Does the UI lack an empty state, loading state, or error state? *(R-27)*
-- [ ] Does the FAQ contain generic questions that are not relevant to the product? *(R-28)*
-- [ ] Can the UI not be navigated by keyboard (Tab, Enter, Escape) or is there no visible focus state? *(R-32)*
-- [ ] Was any feature added by patching source/CSS with an external script instead of writing it in source? *(R-33)*
-- [ ] If a theme toggle exists, does one mode (light or dark) break styles, fonts, or layout? *(R-34)*
-- [ ] Was the app delivered without being run or built, or without a recorded click-through of every interactive element? *(R-35)*
-- [ ] Are there any fabricated security, compliance, performance, or customer claims? *(R-36)*
-- [ ] Was the design built without direction and not labeled *"draft without direction"* with honest default dials ENERGY 1 / RHYTHM 1 / MOTION 1? *(R-37)*
-- [ ] Is there any realistically-styled content that was fabricated (testimonials, features, statistics, ghost links, fictional team) without a real source? *(R-38)*
+Answer the relevant questions. Any confirmed material defect should be fixed or explicitly blocked before delivery:
+
+- [ ] Does punctuation or sentence structure feel repetitive, unnatural, or inconsistent with the intended voice? *(R-02)*
+- [ ] Is there horizontal overflow, escaped text, collision, or unusable navigation at required breakpoints? *(R-03)*
+- [ ] Are consequential metrics or claims fabricated or misleadingly unlabeled? *(R-17, R-36, R-38)*
+- [ ] Are testimonials or represented identities fictional but presented as real? *(R-18, R-23)*
+- [ ] Do navigation items or controls appear functional but lead nowhere without an honest unavailable state? *(R-24, R-26)*
+- [ ] Does required content fail the project's stated accessibility target? *(R-25, R-32)*
+- [ ] Are states missing for conditions the interface can actually enter? *(R-27)*
+- [ ] Does an FAQ invent user concerns merely to fill a template? *(R-28)*
+- [ ] Did a source transformation introduce unreviewed or brittle changes? *(R-33)*
+- [ ] Does any shipped theme break? *(R-34)*
+- [ ] Are material changed flows unverified, or are tests being claimed that were not performed? *(R-35)*
+- [ ] Were important design assumptions hidden or contradicted by the result? *(R-37)*
 
 ### Block 2: Purpose-Gate (technique allowed, reason required)
 
@@ -626,17 +638,14 @@ For each technique, the technique itself is allowed. FAIL if it appears as a def
 - [ ] Do all elements use template animations simultaneously (Fade Up + Floating + Scale + Bounce) without a written UX purpose, or does the motion contradict the declared MOTION dial? *(R-19)*
 - [ ] Are there generic illustrations (Undraw, Storyset, 3D blob) with no written product connection? *(R-22)*
 
-### Block 3: Liveliness (required to be alive, not just clean)
+### Block 3: Character & Fit (when relevant)
 
-All answers must be **yes**:
+Use these prompts for expressive or brand-led work; do not force them onto purely utilitarian interfaces:
 
-- [ ] Are the dials set and explicit (ENERGY / RHYTHM / MOTION declared)?
-- [ ] Is the output consistent with the claimed dials? (RHYTHM 3 but uniform sections = FAIL)
-- [ ] Is there at least one clear focal point per screen?
-- [ ] Is whitespace structural (used to separate and set rhythm), not leftover?
-- [ ] Is there one deliberate accent (not zero, not everywhere)?
-- [ ] Is there an identity motif (one specific, repeated pattern, gesture, or typographic voice)?
-- [ ] Was a Design Read declared before generation?
+- [ ] Is the intended level of energy, rhythm, and motion understandable, whether described with dials or ordinary language?
+- [ ] Is hierarchy clear for the screen's actual tasks?
+- [ ] Do spacing, accents, and motifs support the intended identity rather than satisfy a quota?
+- [ ] Does the result fit the audience, content, and surrounding product?
 
 ### Block 4: Craftsmanship & Quality Locks
 
